@@ -17,7 +17,8 @@ class ScanDocGui:
         self.imagechange=ttk.Label(self.mainframe)
         self.imagechange.grid(column=2,row=2,sticky=(W,E))
 
-        ttk.Button(self.mainframe,text="Scan Document",command=self.ScanDocument).grid(column=3,row=1,sticky=E)
+        ttk.Button(self.mainframe,text="Scan Document",command=self.ScanDocument).grid(column=4,row=1,sticky=E)
+        ttk.Button(self.mainframe,text="Browse",command=self.Browse).grid(column=3,row=1, sticky = W)
         ttk.Label(self.mainframe, text="Filepath To Document: ").grid(column=1,row=1, sticky=W)
 
 
@@ -29,7 +30,7 @@ class ScanDocGui:
             
         self.ImageFilePath_entry.focus()
         parent.bind("<Return>",self.ScanDocument)
-        
+ # Checks if pathFile exist then makes the image to Scanned Document
     def ScanDocument(self,*args):
         if os.path.exists(self.ImageFilePath.get()):
             value = documentScanner(self.ImageFilePath.get())
@@ -41,17 +42,19 @@ class ScanDocGui:
             
         else:
             messagebox.showinfo(message=f"File Path {self.ImageFilePath.get()} doesn't exist")
-            
+ # Ask where to save and save as Jpeg as default
     def SaveDocument(self):
         filename=filedialog.asksaveasfilename(defaultextension=".jpeg",filetypes=[("Jpeg File","*.jpeg"),("PNG file","*.png"),("All Files","*.*")])
         self.docImageCopy.save(f"{filename}")
         self.SaveMessage.set(f"Image has been saved in {filename}")
-        
+
+ #  Checks Whether ScannedDocument has been used for creating Toplevel Window
     def CheckTopLevelRemovable(self):
         if type(self.ScannedDocument) is str:
             return False
         else:
             return True
+ # Creates A GUI that shows the Scanned Document and Have a Button for Saving
     def CreateDocumentGui(self):
         if self.CheckTopLevelRemovable() == True:
             self.ScannedDocument.destroy()
@@ -61,6 +64,9 @@ class ScanDocGui:
         self.SaveMessage=StringVar()
         ttk.Label(self.ScannedDocument,textvariable=self.SaveMessage).grid(column=1,row=2,sticky=N)
         ttk.Label(self.ScannedDocument,image=self.imgObj).grid(column=1,row=3,sticky=N)
+    def Browse(self):
+        filename = filedialog.askopenfilename(filetypes=[("Jpeg File","*.jpeg"),("PNG file","*.png"),("All Files","*.*")])
+        self.ImageFilePath.set(filename)
     
 root=Tk()
 root.title("Document To Scanner")
