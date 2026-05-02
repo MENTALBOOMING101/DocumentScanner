@@ -4,7 +4,7 @@ import imutils
 from skimage.filters import threshold_local
 from perspectivetransform import four_point_transform
 def documentScanner(imgFilepath):
-    print("THIS IMAGE FILE PATHL:",imgFilepath)
+
     image = cv2.imread(imgFilepath)
     ratio = image.shape[0] / 500.0
     orig = image.copy()
