@@ -30,6 +30,7 @@ class ScanDocGui:
             
         self.ImageFilePath_entry.focus()
         parent.bind("<Return>",self.ScanDocument)
+        
  # Checks if pathFile exist then makes the image to Scanned Document
     def ScanDocument(self,*args):
         if os.path.exists(self.ImageFilePath.get()):
@@ -42,19 +43,21 @@ class ScanDocGui:
             
         else:
             messagebox.showinfo(message=f"File Path {self.ImageFilePath.get()} doesn't exist")
+            
  # Ask where to save and save as Jpeg as default
     def SaveDocument(self):
         filename=filedialog.asksaveasfilename(defaultextension=".jpeg",filetypes=[("Jpeg File","*.jpeg"),("PNG file","*.png"),("All Files","*.*")])
         self.docImageCopy.save(f"{filename}")
         self.SaveMessage.set(f"Image has been saved in {filename}")
 
- #  Checks Whether ScannedDocument has been used for creating Toplevel Window
+ # Checks Whether ScannedDocument has been used for creating Window
     def CheckTopLevelRemovable(self):
         if type(self.ScannedDocument) is str:
             return False
         else:
             return True
- # Creates A GUI that shows the Scanned Document and Have a Button for Saving
+        
+ # Creates A Window that shows the Scanned Document and Have a Button for Saving
     def CreateDocumentGui(self):
         if self.CheckTopLevelRemovable() == True:
             self.ScannedDocument.destroy()
@@ -64,9 +67,13 @@ class ScanDocGui:
         self.SaveMessage=StringVar()
         ttk.Label(self.ScannedDocument,textvariable=self.SaveMessage).grid(column=1,row=2,sticky=N)
         ttk.Label(self.ScannedDocument,image=self.imgObj).grid(column=1,row=3,sticky=N)
+        
+ # Creates a dialog that can be used for browsing files for adding Scanned Documents
     def Browse(self):
         filename = filedialog.askopenfilename(filetypes=[("Jpeg File","*.jpeg"),("PNG file","*.png"),("All Files","*.*")])
         self.ImageFilePath.set(filename)
+    
+    
     
 root=Tk()
 root.title("Document To Scanner")

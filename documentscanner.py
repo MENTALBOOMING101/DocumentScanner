@@ -1,8 +1,8 @@
-import numpy as np
 import cv2
 import imutils
 from skimage.filters import threshold_local
 from perspectivetransform import four_point_transform
+import pytesseract
 def documentScanner(imgFilepath):
 
     image = cv2.imread(imgFilepath)
@@ -33,8 +33,17 @@ def documentScanner(imgFilepath):
     warped = (warped >T).astype("uint8") * 255
 
     return warped
+
+def imageToText(PILimage):
+    text = pytesseract.image_to_string(PILimage)
+    return text
+def imageToPdf(PILimage):
+    pdf = pytesseract.image_to_pdf_or_hocr(PILimage)
+    with open("scannedDoc.pdf", "w+b") as f:
+        f.write(pdf)
 if __name__ == "__main__":
     doc=documentScanner("IMG_20260430_130908.jpg")
     
     cv2.imshow("LABRADOR",doc)
+    cv2.imwrite("ScannedDoc.jpg",doc)
     cv2.waitKey(0)
