@@ -37,7 +37,7 @@ def documentScanner(imgFilepath):
 def imageToText(PILimage):
     text = pytesseract.image_to_string(PILimage)
     return text
-def imageToPdf(PILimage):
+def imageToPdf(PILimage,filePath):
     pdf = pytesseract.image_to_pdf_or_hocr(PILimage)
     with open("scannedDoc.pdf", "w+b") as f:
         f.write(pdf)

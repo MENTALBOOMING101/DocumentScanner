@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import ttk , messagebox,Toplevel,filedialog
 from PIL import ImageTk,Image
-from documentscanner import documentScanner
+from documentscanner import documentScanner,imageToText,imageToPdf
 import os
 class ScanDocGui:
     ScannedDocument=""
@@ -63,17 +63,35 @@ class ScanDocGui:
             self.ScannedDocument.destroy()
             
         self.ScannedDocument=Toplevel(self.parent)
-        ttk.Button(self.ScannedDocument,text="Save Scanned Document",command=self.SaveDocument).grid(column=1,row=1,sticky=N)
+        ttk.Button(self.ScannedDocument,text="Save Document",command=self.SaveDocument).grid(column=1,row=1,sticky=N)
+        ttk.Button(self.ScannedDocument,text="Save Document as PDF",command=self.SaveDocumentAsPDF).grid(column=2,row=1,sticky=N)
+        ttk.Button(self.ScannedDocument,text="Turn Image to text",command=self.TurnDocumentToString).grid(column=3,row=1,sticky=N)
         self.SaveMessage=StringVar()
         ttk.Label(self.ScannedDocument,textvariable=self.SaveMessage).grid(column=1,row=2,sticky=N)
-        ttk.Label(self.ScannedDocument,image=self.imgObj).grid(column=1,row=3,sticky=N)
+        ttk.Label(self.ScannedDocument,image=self.imgObj).grid(column=2,row=3,sticky=N)
         
  # Creates a dialog that can be used for browsing files for adding Scanned Documents
     def Browse(self):
         filename = filedialog.askopenfilename(filetypes=[("Jpeg File","*.jpeg"),("PNG file","*.png"),("All Files","*.*")])
         self.ImageFilePath.set(filename)
-    
-    
+        
+  # Turns Image into PDF
+    def SaveDocumentAsPDF(self):
+        filename=filedialog.asksaveasfilename(defaultextension=".pdf",filetypes=[("PDF files","*.pdf"),("All Files","*.*")])      
+        imageToPdf(self.docImageCopy,filename)
+        self.SaveMessage.set(f"Image has been saved in {filename}")
+
+ # Turn Image in to String
+    def TurnDocumentToString(self):
+        
+        textString=Toplevel(self.ScannedDocument)
+        
+        self.documentText= StringVar()
+        ttk.Label(textString,textvariable=self.documentText).grid(column=1,row=1 ,sticky=S)
+        self.documentText.set(imageToText(self.docImageCopy))
+        print(self.documentText.get())
+        ttk.Button(textString,text="Close").grid(column=1,row=2,sticky=S)
+
     
 root=Tk()
 root.title("Document To Scanner")
